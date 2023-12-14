@@ -20,4 +20,6 @@ ShutterOpen: read/write shutter position (boolean, True = open, False = closed)
 
 authentication: read (boolean; for remote OPAs, only authenticated computers can change OPA settings including output wavelength and shutter position)
 
+ShutterSardana: read/write shutter position (float, 1 = open, 0 = closed; numerical analogue to ShutterOpen for compatibility with TangoAttributeMotorController in Sardana)
+
 interactions: read (string; lists all available interactions and corresponding wavelength ranges)
