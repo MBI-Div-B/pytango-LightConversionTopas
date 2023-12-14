@@ -44,6 +44,14 @@ class Topas(Device):
         label = 'Shutter open',
         access = AttrWriteType.READ_WRITE,)
 
+    ShutterSardana = attribute(dtype = 'DevFloat',
+        label = 'Shutter open',
+        access = AttrWriteType.READ_WRITE,
+        format="%1.0f",
+        min_value = 0,
+        max_value = 1,
+        display_level=DispLevel.EXPERT)
+
     authentication = attribute(dtype = 'DevBoolean',
         label = 'Authentication',
         access = AttrWriteType.READ,
@@ -124,6 +132,12 @@ class Topas(Device):
     def read_interactions(self):
         return self.getCalibrationInfo()
 
+    def read_ShutterSardana(self):
+        if self.read_ShutterOpen():
+            return 1
+        else:
+            return 0
+
     ### WRITE methods ###
     
     def write_wavelength(self, value):
@@ -139,6 +153,12 @@ class Topas(Device):
             self.put('/ShutterInterlock/OpenCloseShutter', False)
         time.sleep(0.2)
 
+    def write_ShutterSardana(self,value):
+        if int(value) == 0:
+            self.write_ShutterOpen(False)
+        elif int(value) == 1:
+            self.write_ShutterOpen(True)
+
     ### Other methods ###
 
     def getCalibrationInfo(self):
@@ -147,8 +167,7 @@ class Topas(Device):
         if len(interactions)==0:
             res = "There are no calibrated interactions"
         else:
-            print("Available interactions:")
-            res = ''
+            res = 'Available interactions'
             for item in interactions:
                 s = item['Type'] + " %d - %d nm" % (item['OutputRange']['From'], item['OutputRange']['To'])
                 res = res + '\n'+s
